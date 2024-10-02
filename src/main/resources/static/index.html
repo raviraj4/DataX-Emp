@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+      }
+    </style>
+    <script>
+      async function displayAll() {
+        //   const id = document.getElementById("getId").value;
+        fetch(`/users/all`)
+          .then((res) => res.json())
+          .then((users) => {
+            const table = document.getElementById("employeeTable");
+            table.innerHTML = "";
+            users
+              .forEach((user) => {
+                const row = table.insertRow();
+                const c1 = row.insertCell(0);
+                const c2 = row.insertCell(1);
+                const c3 = row.insertCell(2);
+                const c4 = row.insertCell(3);
+
+                c1.innerHTML = user.id;
+                c2.innerHTML = user.name;
+                c3.innerHTML = user.city;
+                c4.innerHTML = user.contactNumber;
+              })
+
+              .catch((error) => console.error("Error", error));
+          });
+      }
+
+      async function addUserToList() {
+        const cont = document.getElementById("contactId").value;
+        const city = document.getElementById("cityId").value;
+        const name = document.getElementById("nameId").value;
+        fetch(`/users/generate?name=${name}&city=${city}&contact=${cont}`, { method: "POST" })
+          .then((res) => {
+            if (res.ok) {
+              alert("Added successfully");
+            } else {
+              alert("Failed");
+            }
+          })
+          .catch((error) => console.error("Error: ", error));
+      }
+
+      function deleteUser() {
+        const id = document.getElementById("deleteId").value;
+        fetch(`/users/delete?id=${id}`, { method: "DELETE" })
+          .then((res) => {
+            if (res.ok) {
+              alert("Employee deleted successfully");
+            } else {
+              alert("Employee deleted successfully");
+            }
+          })
+          .catch((error) => console.error("Error: ", error));
+      }
+    </script>
+  </head>
+  <body>
+    <div class=" m-10">
+
+        <div>
+            <!-- h2 -->
+            <h2>Add Users</h2>
+            <input type="text" id="nameId" class="px-2 py-2" placeholder="enter name" />
+            <input type="text" id="cityId" class="px-2 py-2" placeholder="enter city" />
+            <input
+            type="text"
+            id="contactId"
+            class="px-2 py-2"
+            placeholder="enter contact detail"
+            />
+            
+            <button
+            onclick="addUserToList()"
+            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-gray-700"
+            >
+            Add
+        </button>
+    </div>
+    
+    <div>
+        <!-- h2 -->
+        <h2>Delete Users</h2>
+        <input type="text" id="deleteId" class="px-2 py-2" placeholder="enter id" />
+          
+    
+        <button
+        onclick="deleteUser()"
+        class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-gray-700"
+        >
+        Delete
+    </button>
+</div>
+
+<div class="my-10 flex flex-col items-start">
+  <button
+    onclick="displayAll()"
+    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-gray-700"
+  >
+    view all
+  </button>
+  <table
+    id=""
+    class="text-left rtl:text-right rounded-lg text-gray-500 dark:text-gray-400"
+  >
+    <thead
+      class="text-lg text-gray-700 rounded-xl uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+    >
+      <tr class="rounded-lg">
+        <th class="px-2">id</th>
+        <th class="px-2">name</th>
+        <th class="px-2">city</th>
+        <th class="px-2">contact</th>
+      </tr>
+    </thead>
+
+    <tbody
+      id="employeeTable"
+      class="bg-white w-[400px] p-3 border-b dark:bg-gray-800 dark:border-gray-700"
+    ></tbody>
+  </table>
+</div>
+
+</div>
+  </body>
+</html>
